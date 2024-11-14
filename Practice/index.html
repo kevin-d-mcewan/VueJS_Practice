@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Vue Practice</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+	</head>
+	<body>
+		<!-- normal <html> elements -->
+		<div id="firstDiv">
+			<!-- Use the {{...}} to input the var from firstVue. and it knows its from 'firstVue' bc "el" matches the id for this <div> -->
+			<p>The number is: {{number + 2}}</p>
+
+			<p>String displayed here: {{stringData}}</p>
+			<p>Array displayed here: {{ arrayData[0] }}</p>
+			<p>Object displayed here: {{ objectData.objectNumber}}</p>
+		</div>
+
+		<div id="secondDiv">
+			<button v-on:click="openCloseDoor">Open or Close Door</button>
+			<p v-if="isDoorOpen">Come in!</p>
+			<p v-else="!isDoorOpen">Stay out</p>
+		</div>
+
+		<div id="thirdDiv">
+			<!-- 'v-model' with <input> is taking whatever we input in the textbox and placing it into the var "number1"-->
+			<input v-model="number1" />
+			<p>The number is: {{number1}}</p>
+			<ul>
+				<li v-for="number_ in numbers2">{{ number_ }}</li>
+			</ul>
+		</div>
+
+		<!-- MAKE SURE PROPS AND VARS DONT HAVE UPPERCASE. Would not work sytax says no capitalization [i.e.: 'groceryitem' NOT groceryItem] -->
+		<div id="fourthDiv">
+			<ul>
+				<grocery-item groceryitem="milk"></grocery-item>
+				<grocery-item groceryitem="bread"></grocery-item>
+				<grocery-item groceryitem="apples"></grocery-item>
+			</ul>
+		</div>
+
+		<div id="fifthDiv">
+			<ul>
+				<baseball-terms
+					v-for="term in baseballTerms"
+					v-bind:baseballterms="term"
+				></baseball-terms>
+			</ul>
+		</div>
+
+		<!-- JS/Vue Code-->
+		<script>
+			// all the vue.js scripts and tags
+
+			/* FIRST VIEW */
+			var firstVue = new Vue({
+				el: "#firstDiv",
+				data: {
+					number: 1,
+					stringData: "some string",
+					booleanData: true,
+					arrayData: [1, 2, 3],
+					objectData: {
+						objectString: "object string",
+						objectNumber: 2,
+					},
+				},
+			});
+
+			firstVue.number = 5;
+			firstVue.$data = { number: 31, message: "my name is KING" };
+
+			// Watch method, watches for something and does something done with '.$watch'
+			// firstVue.$watch("number", function () {
+			// 	alert("number has changed");
+			// });
+			// firstVue.number = 10;
+
+			/* SECOND VIEW */
+			var secondDiv = new Vue({
+				el: "#secondDiv",
+				data: {
+					isDoorOpen: false,
+				},
+				// methods is a function && 'openCloseDoor' is the name of the function/method
+				methods: {
+					openCloseDoor: function () {
+						this.isDoorOpen = !this.isDoorOpen;
+					},
+				},
+			});
+
+			/* THIRD VIEW*/
+			var thirdDiv = new Vue({
+				el: "#thirdDiv",
+				data: {
+					number1: 1,
+					numbers2: [1, 2, 3],
+				},
+			});
+
+			/* CREATING A VUE COMPONENT*/
+			Vue.component("grocery-item", {
+				// 'props' is all the variables we want to put in the Component, best to put in a dictionary but can be done many ways
+				/* MAKE SURE PROPS AND VARS DONT HAVE UPPERCASE. Would not work sytax says no capitalization	[i.e.: 'groceryitem' NOT groceryItem */
+				props: ["groceryitem"],
+				template: "<li> {{groceryitem}}</li>",
+			});
+
+			/* FOURTH VIEW*/
+			var fourthDiv = new Vue({
+				el: "#fourthDiv",
+			});
+
+			Vue.component("baseball-terms", {
+				props: ["baseballterms"],
+				template: "<li> {{baseballterms.bases}} {{baseballterms.name}}</li>",
+			});
+
+			/* FIFTH VIEW*/
+			var fifthDiv = new Vue({
+				el: "#fifthDiv",
+				data: {
+					baseballTerms: [
+						{ name: "single", bases: 1 },
+						{ name: "double", bases: 2 },
+						{ name: "triple", bases: 3 },
+						{ name: "homerun", bases: 4 },
+					],
+				},
+			});
+		</script>
+	</body>
+</html>
